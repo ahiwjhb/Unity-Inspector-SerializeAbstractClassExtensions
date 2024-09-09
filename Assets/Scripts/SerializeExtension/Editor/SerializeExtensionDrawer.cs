@@ -98,7 +98,22 @@ namespace Core
                         property.managedReferenceValue = null;
                     }
                     else {
-                        property.managedReferenceValue = FormatterServices.GetSafeUninitializedObject(subTypes[newSelectIndex - 1]); // 将选择框的一个偏移量减回来
+                        bool hasDefaultConstructor = false;
+
+                        Type type = subTypes[newSelectIndex - 1]; // 将选择框的一个偏移量减回来
+                        ConstructorInfo[] constructors = type.GetConstructors();
+                        // 查找无参构造函数
+                        foreach (var constructor in constructors) {
+                            if (constructor.GetParameters().Length == 0) {
+                                // 调用无参构造函数并返回实例
+                                hasDefaultConstructor = true;
+                               property.managedReferenceValue = constructor.Invoke(null);
+                            }
+                        }
+
+                        if (!hasDefaultConstructor) {
+                            property.managedReferenceValue = FormatterServices.GetSafeUninitializedObject(type);
+                        }
                     }
                     property.serializedObject.ApplyModifiedProperties(); //更改多态类型后必须马上保存，否则后续序列化可能会出现异常
                 }
