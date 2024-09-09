@@ -330,6 +330,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39b7687e21ae28348b198d5a533819cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  peopel:
+    rid: 7289075113654747151
+  a: 10
+  b: 20
+  references:
+    version: 2
+    RefIds:
+    - rid: 7289075113654747151
+      type: {class: Student, ns: Demo.Test, asm: Assembly-CSharp}
+      data:
+        m_name: ABC
 --- !u!4 &1545680082
 Transform:
   m_ObjectHideFlags: 0

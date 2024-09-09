@@ -1,4 +1,4 @@
-using Demo.Test;
+using Core;
 using System;
 using UnityEngine;
 
@@ -7,6 +7,7 @@ namespace Demo.Test
     [Serializable]
     public class Student : IPerson
     {
-        [SerializeField] int student_id;
+        [SerializeExtension(canWrite: false)]
+        [SerializeField] string m_name = "ABC";
     }
 }
