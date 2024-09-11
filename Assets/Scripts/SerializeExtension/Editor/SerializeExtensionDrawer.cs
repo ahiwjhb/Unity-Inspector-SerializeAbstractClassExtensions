@@ -38,8 +38,7 @@ namespace Core
             }
 
             bool hasValueUpdated = EditorGUI.EndChangeCheck() || !attribute.CanWrite; // !attribute.CanWrite : 当变量不可写时大概率用作显示某个字段的成员信息，为了避免字段发生修改时成员信息更新不同步的问题需要保持更新才行
-            bool canSerializeType = typeof(UnityEngine.Object).IsAssignableFrom(fieldType) || fieldType.IsValueType;
-            if (hasValueUpdated && canSerializeType && attribute.ProxyPropertyName != null) {
+            if (hasValueUpdated && attribute.ProxyPropertyName != null) {
                 var owner = GetFieldOwner(property);
                 PropertyInfo proxy = owner.GetType().GetProperty(attribute.ProxyPropertyName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public); ;
                 if (CheckPropertyProxyValid(proxy, owner, fieldType)) {
@@ -138,20 +137,6 @@ namespace Core
             }
             return FormatterServices.GetSafeUninitializedObject(type);
         }
-
-        //private Type GetRuntimeType(SerializedProperty property) {
-        //    Type fieldType = fieldInfo.FieldType;
-        //    bool canSerializeType = typeof(UnityEngine.Object).IsAssignableFrom(fieldType) || fieldType.IsValueType;
-        //    if (canSerializeType || property.propertyType != SerializedPropertyType.ManagedReference) {
-        //        return fieldInfo.FieldType;
-        //    }
-        //    else {
-        //        string[] info = property.managedReferenceFieldTypename.Split();
-        //        string asseblyName = info[0], typeName = info[1];
-        //        Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(item => item.GetName().Name == asseblyName);
-        //        return  assembly.GetType(typeName);
-        //    }
-        //}
 
         #endregion
 
