@@ -29,9 +29,20 @@ namespace Core
             EditorGUI.BeginProperty(position, label, property);
             EditorGUI.BeginChangeCheck();
 
-            Type fieldType = fieldInfo.FieldType;
+            Type fieldType = null;
+            bool isUnityObject = typeof(UnityEngine.Object).IsAssignableFrom(fieldInfo.FieldType);
+            if (isUnityObject || fieldInfo.FieldType.IsValueType || property.propertyType != SerializedPropertyType.ManagedReference) {
+                fieldType = fieldInfo.FieldType;
+            }
+            else {
+                string[] info = property.managedReferenceFieldTypename.Split();
+                string asseblyName = info[0], typeName = info[1];
+                Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(item => item.GetName().Name == asseblyName);
+                fieldType = assembly.GetType(typeName);
+            }
+
             if (fieldType.IsAbstract || fieldType.IsInterface) {
-                ShowPolymorphismField(position, property, label);
+                ShowPolymorphismField(fieldType, position, property, label);
             }
             else {
                 EditorGUI.PropertyField(position, property, label, true);
@@ -62,9 +73,8 @@ namespace Core
         #region Show Polymorphism Field
         private readonly static Dictionary<Type, List<Type>> _subTypeDict = new();
 
-        private void ShowPolymorphismField(Rect position, SerializedProperty property, GUIContent label) { 
+        private void ShowPolymorphismField(Type abstractType, Rect position, SerializedProperty property, GUIContent label) { 
             // 绘制选择框
-            Type abstractType = fieldInfo.FieldType;
             List<Type> subTypes = GetSubTypes(abstractType);
 
             Rect labelRect = EditorGUI.IndentedRect(new(position) {
