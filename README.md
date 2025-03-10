@@ -1,7 +1,7 @@
 Serialize Extension
 ===
 
-提供了一些解决Inspector面板序列化抽象类过于冗杂的方案
+为解决Inspector面板序列化抽象类过于冗杂提供了一些方案
 
 - [序列化抽象类和接口](#serialize-extension_1.1)
 - [使用属性代理字段的赋值](#serialize-extension_1.2)
